@@ -1,9 +1,13 @@
-<div>
+<% if current_user %>
+  <%= link_to 'tracks', user_tracks_path(@user.id) %>
+<% else %>
   <div>
-    <h1>RunningClub Rails App</h1>
+    <div>
+      <h1>RunningClub Rails App</h1>
+    </div>
+    <div>
+      <%= link_to 'LOG IN', new_user_session_path, class: '', style: '' %>
+      <%= link_to 'SIGN UP', new_user_registration_path, class: '', style: '' %>
+    </div>
   </div>
-  <div>
-    <%= link_to 'LOG IN', new_user_session_path, class: '', style: '' %>
-    <%= link_to 'SIGN UP', new_user_registration_path, class: '', style: '' %>
-  </div>
-</div>
+<% end %>
