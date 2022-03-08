@@ -2,6 +2,7 @@
   <h1>YOU ARE LOGGED IN</h1>
   <button id="start" onclick="getLocationUpdate()">Start</button>
   <button id="stop" onclick="stopWatch()">Stop</button>
+  <button id="clear" onclick="clearStorage()">Clear</button>
   <script>
     var watchID;
     var geoLoc;
@@ -29,6 +30,13 @@
 
     function stopWatch() {
       geoLoc.clearWatch(watchID);
+    }
+
+    function clearStorage() {
+      latitude = [];
+      longitude = [];
+      window.localStorage.setItem('latitude',JSON.stringify(latitude));
+      window.localStorage.setItem('longitude',JSON.stringify(longitude));
     }
   </script>
 </header>
