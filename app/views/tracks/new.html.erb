@@ -78,7 +78,7 @@
       long.type = 'hidden';
       long.step = 'any';
     }
-    document.getElementById('time').value = sec;
+    document.getElementById('time').value = sec + (min * 60) + (hr * 3600);
   }
 
   function timerCycle() {
