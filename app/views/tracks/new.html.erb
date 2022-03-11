@@ -1,0 +1,128 @@
+<div>
+  <p>WATCH:</p>
+  <p id="stopwatch">00:00:00</p>
+</div>
+<button id="start" onclick="getLocationUpdate()">Start</button>
+<button id="stop" onclick="stopWatch()">Stop</button>
+<button id="clear" onclick="clearStorage()">Clear</button>
+
+<%= form_with model: @track, url: user_tracks_path(@user.id), method: :post do |f| %>
+  <%= f.label :extra %>
+  <%= f.text_field :extra %>
+
+  <%= f.hidden_field :time, id:'time' %>
+
+  <div id='lat-div'></div>
+  <div id='long-div'></div>
+
+  <%= f.submit "Save" %>
+<% end %>
+
+<script>
+  var watchID;
+  var geoLoc;
+
+  const timer = document.getElementById('stopwatch');
+  var hr = 0;
+  var min = 0;  
+  var sec = 0;  
+  var stoptime = true;  
+
+  var latitude = [];
+  var longitude = [];
+
+  function getLocationUpdate() {
+    if(navigator.geolocation){
+      geoLoc = navigator.geolocation;
+      watchID = geoLoc.watchPosition(data => {
+        if (stoptime == true) {
+          stoptime = false;
+          timerCycle();
+        }
+        console.log(data);
+        latitude.push(data.coords.latitude);
+        longitude.push(data.coords.longitude);
+        window.localStorage.setItem('latitude',JSON.stringify(latitude));
+        window.localStorage.setItem('longitude',JSON.stringify(longitude));
+      }, (error) => console.log(error),
+      {
+        enableHighAccuracy: true,
+      });
+    } else {
+        alert("Sorry, browser does not support geolocation!");
+    }
+  }
+
+  function stopWatch() {
+    if (stoptime == false) {
+      stoptime = true;
+    }
+    geoLoc.clearWatch(watchID);
+    const len = latitude.length;
+    for(var i = 0; i < len; i++) {
+      var lat = document.getElementById('lat-div').appendChild(
+          document.createElement('input')
+      )
+      lat.value = [latitude[i]];
+      lat.id = 'track_latitude';
+      lat.name = 'track[latitude][]';
+      lat.type = 'hidden';
+      lat.step = 'any';
+
+      var long = document.getElementById('long-div').appendChild(
+          document.createElement('input')
+      )
+      long.value = longitude[i];
+      lat.id = 'track_longitude';
+      long.name = 'track[longitude][]';
+      long.type = 'hidden';
+      long.step = 'any';
+    }
+    document.getElementById('time').value = sec;
+  }
+
+  function timerCycle() {
+    if (stoptime == false) {
+      sec = parseInt(sec);
+      min = parseInt(min);
+      hr = parseInt(hr);
+
+      sec = sec + 1;
+
+      if (sec == 60) {
+        min = min + 1;
+        sec = 0;
+      }
+      if (min == 60) {
+        hr = hr + 1;
+        min = 0;
+        sec = 0;
+      }
+
+      if (sec < 10 || sec == 0) {
+        sec = '0' + sec;
+      }
+      if (min < 10 || min == 0) {
+        min = '0' + min;
+      }
+      if (hr < 10 || hr == 0) {
+        hr = '0' + hr;
+      }
+
+      timer.innerHTML = hr + ':' + min + ':' + sec;
+
+      setTimeout("timerCycle()", 1000);
+    }
+  }
+
+  function clearStorage() {
+    latitude = [];
+    longitude = [];
+    window.localStorage.setItem('latitude',JSON.stringify(latitude));
+    window.localStorage.setItem('longitude',JSON.stringify(longitude));
+    timer.innerHTML = '00:00:00';
+    hr = 0;
+    min = 0;  
+    sec = 0;
+  }
+</script>
