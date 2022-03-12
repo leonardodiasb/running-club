@@ -1,0 +1,39 @@
+<%= link_to root_url do %>
+  <p>BACK</p>
+<% end %>
+<h1>This track exists</h1>
+<p>TIME SPENT:<%= @track.time %></p>
+<p>CREATED AT:<%= @track.created_at%></p>
+
+<div style="display: flex;">
+  <div style="border-right: 1px solid;">
+    <p>LAT:</p>
+    <div>
+      <% @track.latitude.each do |lat| %>
+        <p><%= lat %></p>
+      <% end %>
+    </div>
+  </div>
+  <div style="border-right: 1px solid;">
+    <p>LONG:</p>
+    <div>
+      <% @track.longitude.each do |long| %>
+        <p><%= long %></p>
+    <% end %>
+    </div>
+  </div>
+  <div style="border-right: 1px solid;">
+    <p>TIMESTAMP:</p>
+    <div>
+      <% @track.timestp.each do |tmstp| %>
+        <p><%= tmstp %></p>
+    <% end %>
+    </div>
+  </div>
+  <div style="border-right: 1px solid;">
+    <p>TIME FROM TIMESTAMP:</p>
+    <div>
+      <%= @tm %>
+    </div>
+  </div>
+</div>
