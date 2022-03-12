@@ -3,8 +3,15 @@ class TracksController < ApplicationController
 
   def index
     @user = current_user
+    @tracks = @user.tracks.order(created_at: :desc)
   end
 
+  def show
+    @user = current_user
+    @track = Track.find(params[:id])
+    @tm = @track.timestp.last - @track.timestp[0]
+  end
+  
   def new
     @user = current_user
     @track = Track.new
@@ -26,6 +33,6 @@ class TracksController < ApplicationController
   private
   
   def track_params
-    params.require(:track).permit(:extra, { :latitude => [] }, { :longitude => [] }, :time)
+    params.require(:track).permit(:extra, { :latitude => [] }, { :longitude => [] }, { :timestp => [] }, :time)
   end
 end
