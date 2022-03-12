@@ -14,6 +14,7 @@
 
   <div id='lat-div'></div>
   <div id='long-div'></div>
+  <div id='timestp-div'></div>
 
   <%= f.submit "Save" %>
 <% end %>
@@ -30,6 +31,7 @@
 
   var latitude = [];
   var longitude = [];
+  var timestp = [];
 
   function getLocationUpdate() {
     if(navigator.geolocation){
@@ -42,6 +44,7 @@
         console.log(data);
         latitude.push(data.coords.latitude);
         longitude.push(data.coords.longitude);
+        timestp.push(data.timestamp);
         window.localStorage.setItem('latitude',JSON.stringify(latitude));
         window.localStorage.setItem('longitude',JSON.stringify(longitude));
       }, (error) => console.log(error),
@@ -73,10 +76,19 @@
           document.createElement('input')
       )
       long.value = longitude[i];
-      lat.id = 'track_longitude';
+      long.id = 'track_longitude';
       long.name = 'track[longitude][]';
       long.type = 'hidden';
       long.step = 'any';
+
+      var tmstp = document.getElementById('timestp-div').appendChild(
+          document.createElement('input')
+      )
+      tmstp.value = timestp[i];
+      tmstp.id = 'track_timestp';
+      tmstp.name = 'track[timestp][]';
+      tmstp.type = 'hidden';
+      tmstp.step = 'any';
     }
     document.getElementById('time').value = sec + (min * 60) + (hr * 3600);
   }
