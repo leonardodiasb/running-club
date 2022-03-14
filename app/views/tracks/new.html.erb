@@ -50,13 +50,22 @@
           timerCycle();
         }
         console.log(data);
+        console.log(speed);
         latitude.push(data.coords.latitude);
         longitude.push(data.coords.longitude);
         timestp.push(data.timestamp);
-        speed.push(data.coords.speed);
-        altitude.push(data.coords.altitude);
-        accuracy.push(data.coords.accuracy);
-        altitude_accuracy.push(data.coords.altitude_accuracy);
+        if(data.coords.speed) {
+          speed.push(data.coords.speed);
+        }
+        if(data.coords.altitude) {
+          altitude.push(data.coords.altitude);
+        }
+        if(data.coords.accuracy) {
+          accuracy.push(data.coords.accuracy);
+        }
+        if(data.coords.altitude_accuracy) {
+          altitude_accuracy.push(data.coords.altitude_accuracy);
+        }
         window.localStorage.setItem('latitude',JSON.stringify(latitude));
         window.localStorage.setItem('longitude',JSON.stringify(longitude));
       }, (error) => console.log(error),
@@ -103,41 +112,49 @@
       tmstp.type = 'hidden';
       tmstp.step = 'any';
 
-      var spd = document.getElementById('speed-div').appendChild(
-          document.createElement('input')
-      )
-      spd.value = speed[i];
-      spd.id = 'track_speed';
-      spd.name = 'track[speed][]';
-      spd.type = 'hidden';
-      spd.step = 'any';
+      if(speed.length > 0) {
+        var spd = document.getElementById('speed-div').appendChild(
+            document.createElement('input')
+        )
+        spd.value = speed[i];
+        spd.id = 'track_speed';
+        spd.name = 'track[speed][]';
+        spd.type = 'hidden';
+        spd.step = 'any';
+      }
 
-      var alt = document.getElementById('altitude-div').appendChild(
-          document.createElement('input')
-      )
-      alt.value = altitude[i];
-      alt.id = 'track_altitude';
-      alt.name = 'track[altitude][]';
-      alt.type = 'hidden';
-      alt.step = 'any';
+      if(altitude.length > 0) {
+        var alt = document.getElementById('altitude-div').appendChild(
+            document.createElement('input')
+        )
+        alt.value = altitude[i];
+        alt.id = 'track_altitude';
+        alt.name = 'track[altitude][]';
+        alt.type = 'hidden';
+        alt.step = 'any';
+      }
 
-      var acc = document.getElementById('accuracy-div').appendChild(
-          document.createElement('input')
-      )
-      acc.value = accuracy[i];
-      acc.id = 'track_accuracy';
-      acc.name = 'track[accuracy][]';
-      acc.type = 'hidden';
-      acc.step = 'any';
+      if(accuracy.length > 0) {
+        var acc = document.getElementById('accuracy-div').appendChild(
+            document.createElement('input')
+        )
+        acc.value = accuracy[i];
+        acc.id = 'track_accuracy';
+        acc.name = 'track[accuracy][]';
+        acc.type = 'hidden';
+        acc.step = 'any';
+      }
 
-      var alt_acc = document.getElementById('altitude_accuracy-div').appendChild(
-          document.createElement('input')
-      )
-      alt_acc.value = altitude_accuracy[i];
-      alt_acc.id = 'track_altitude_accuracy';
-      alt_acc.name = 'track[altitude_accuracy][]';
-      alt_acc.type = 'hidden';
-      alt_acc.step = 'any';
+      if(altitude_accuracy.length > 0) {
+        var alt_acc = document.getElementById('altitude_accuracy-div').appendChild(
+            document.createElement('input')
+        )
+        alt_acc.value = altitude_accuracy[i];
+        alt_acc.id = 'track_altitude_accuracy';
+        alt_acc.name = 'track[altitude_accuracy][]';
+        alt_acc.type = 'hidden';
+        alt_acc.step = 'any';
+      }
     }
     document.getElementById('time').value = sec + (min * 60) + (hr * 3600);
   }
