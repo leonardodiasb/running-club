@@ -15,6 +15,10 @@
   <div id='lat-div'></div>
   <div id='long-div'></div>
   <div id='timestp-div'></div>
+  <div id='speed-div'></div>
+  <div id='accuracy-div'></div>
+  <div id='altitude-div'></div>
+  <div id='altitude_accuracy-div'></div>
 
   <%= f.submit "Save" %>
 <% end %>
@@ -32,6 +36,10 @@
   var latitude = [];
   var longitude = [];
   var timestp = [];
+  var speed = [];
+  var altitude = [];
+  var accuracy = [];
+  var altitude_accuracy = [];
 
   function getLocationUpdate() {
     if(navigator.geolocation){
@@ -45,6 +53,10 @@
         latitude.push(data.coords.latitude);
         longitude.push(data.coords.longitude);
         timestp.push(data.timestamp);
+        speed.push(data.coords.speed);
+        altitude.push(data.coords.altitude);
+        accuracy.push(data.coords.accuracy);
+        altitude_accuracy.push(data.coords.altitude_accuracy);
         window.localStorage.setItem('latitude',JSON.stringify(latitude));
         window.localStorage.setItem('longitude',JSON.stringify(longitude));
       }, (error) => console.log(error),
@@ -89,6 +101,42 @@
       tmstp.name = 'track[timestp][]';
       tmstp.type = 'hidden';
       tmstp.step = 'any';
+
+      var spd = document.getElementById('speed-div').appendChild(
+          document.createElement('input')
+      )
+      spd.value = speed[i];
+      spd.id = 'track_speed';
+      spd.name = 'track[speed][]';
+      spd.type = 'hidden';
+      spd.step = 'any';
+
+      var alt = document.getElementById('altitude-div').appendChild(
+          document.createElement('input')
+      )
+      alt.value = altitude[i];
+      alt.id = 'track_altitude';
+      alt.name = 'track[altitude][]';
+      alt.type = 'hidden';
+      alt.step = 'any';
+
+      var acc = document.getElementById('accuracy-div').appendChild(
+          document.createElement('input')
+      )
+      acc.value = accuracy[i];
+      acc.id = 'track_accuracy';
+      acc.name = 'track[accuracy][]';
+      acc.type = 'hidden';
+      acc.step = 'any';
+
+      var alt_acc = document.getElementById('altitude_accuracy-div').appendChild(
+          document.createElement('input')
+      )
+      alt_acc.value = altitude_accuracy[i];
+      alt_acc.id = 'track_altitude_accuracy';
+      alt_acc.name = 'track[altitude_accuracy][]';
+      alt_acc.type = 'hidden';
+      alt_acc.step = 'any';
     }
     document.getElementById('time').value = sec + (min * 60) + (hr * 3600);
   }

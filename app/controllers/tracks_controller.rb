@@ -33,6 +33,6 @@ class TracksController < ApplicationController
   private
   
   def track_params
-    params.require(:track).permit(:extra, { :latitude => [] }, { :longitude => [] }, { :timestp => [] }, :time)
+    params.require(:track).permit(:extra, { :latitude => [] }, { :longitude => [] }, { :timestp => [] }, { :speed => [] }, { :accuracy => [] }, { :altitude => [] }, { :altitude_accuracy => [] }, :time)
   end
 end
