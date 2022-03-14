@@ -62,6 +62,7 @@
       }, (error) => console.log(error),
       {
         enableHighAccuracy: true,
+        timeout: 2000
       });
     } else {
         alert("Sorry, browser does not support geolocation!");
