@@ -19,6 +19,7 @@
   <div id='accuracy-div'></div>
   <div id='altitude-div'></div>
   <div id='altitude_accuracy-div'></div>
+  <div id='error'></div>
 
   <%= f.submit "Save" %>
 <% end %>
@@ -68,10 +69,15 @@
         }
         window.localStorage.setItem('latitude',JSON.stringify(latitude));
         window.localStorage.setItem('longitude',JSON.stringify(longitude));
-      }, (error) => console.log(error),
+      }, (error) => {
+        console.log(error);
+        var err = document.getElementById('error').appendChild(
+          document.createElement('div')
+        )
+        err.innerHTML = 'Error code:' + error.code + ' Error message:' + error.message;
+      },
       {
         enableHighAccuracy: true,
-        timeout: 2000
       });
     } else {
         alert("Sorry, browser does not support geolocation!");
