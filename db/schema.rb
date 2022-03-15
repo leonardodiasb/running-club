@@ -24,7 +24,7 @@ ActiveRecord::Schema.define(version: 2022_03_14_173036) do
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "user_id", null: false
     t.bigint "timestp", default: [], array: true
-    t.integer "speed", default: [], array: true
+    t.float "speed", default: [], array: true
     t.integer "altitude", default: [], array: true
     t.integer "accuracy", default: [], array: true
     t.integer "altitude_accuracy", default: [], array: true
