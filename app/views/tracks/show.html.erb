@@ -9,6 +9,8 @@
   <div style="border-right: 1px solid;">
     <p>LAT:</p>
     <div>
+      <%= content_tag "div", id: "lat", data: {lat: @track.latitude} do %>
+      <% end %>
       <% @track.latitude.each do |lat| %>
         <p><%= lat %></p>
       <% end %>
@@ -17,6 +19,8 @@
   <div style="border-right: 1px solid;">
     <p>LONG:</p>
     <div>
+      <%= content_tag "div", id: "long", data: {long: @track.longitude} do %>
+      <% end %>
       <% @track.longitude.each do |long| %>
         <p><%= long %></p>
     <% end %>
@@ -69,3 +73,56 @@
     </div>
   </div>
 </div>
+
+<div id='map' style='width: 400px; height: 300px;'></div>
+<script>
+
+  var coord = [];
+  var latElement = document.getElementById('lat');
+  var lat = JSON.parse(latElement.dataset.lat);
+  var longElement = document.getElementById('long');
+  var long = JSON.parse(longElement.dataset.long);
+  console.log(lat);
+  console.log(long);
+
+  for(var i = 0; i < lat.length; i ++) {
+    coord.push([long[i], lat[i]]);
+  }
+  console.log(coord[coord.length/2]);
+
+  mapboxgl.accessToken = 'pk.eyJ1IjoibGVvbmRpYXNiIiwiYSI6ImNsMHJiNGJyeDAxcnQzZG9wNDZwajNuNDYifQ.47GK1AdHnqacQY-pPpxK_Q';
+  var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/streets-v11',
+    center: coord[coord.length/2],
+    zoom: 14
+  });
+  
+  map.on('load', () => {
+    console.log(coord);
+    map.addSource('route', {
+      'type': 'geojson',
+      'data': {
+        'type': 'Feature',
+        'properties': {},
+        'geometry': {
+          'type': 'LineString',
+          'coordinates': coord
+        }
+      }
+    });
+    map.addLayer({
+      'id': 'route',
+      'type': 'line',
+      'source': 'route',
+      'layout': {
+        'line-join': 'round',
+        'line-cap': 'round'
+      },
+      'paint': {
+        'line-color': '#888',
+        'line-width': 8
+      }
+    });
+  });
+</script>
