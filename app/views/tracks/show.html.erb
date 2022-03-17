@@ -48,30 +48,6 @@
       <% end %>
     </div>
   </div>
-  <div style="border-right: 1px solid;">
-    <p>ACCURACY:</p>
-    <div>
-      <% @track.accuracy.each do |acc| %>
-        <p><%= acc %></p>
-      <% end %>
-    </div>
-  </div>
-  <div style="border-right: 1px solid;">
-    <p>ALTITUDE:</p>
-    <div>
-      <% @track.altitude.each do |alt| %>
-        <p><%= alt %></p>
-      <% end %>
-    </div>
-  </div>
-  <div style="border-right: 1px solid;">
-    <p>ALTITUDE ACCURACY:</p>
-    <div>
-      <% @track.altitude_accuracy.each do |alt_acc| %>
-        <p><%= alt_acc %></p>
-      <% end %>
-    </div>
-  </div>
 </div>
 
 <div id='map' style='width: 400px; height: 300px;'></div>
@@ -82,24 +58,20 @@
   var lat = JSON.parse(latElement.dataset.lat);
   var longElement = document.getElementById('long');
   var long = JSON.parse(longElement.dataset.long);
-  console.log(lat);
-  console.log(long);
 
   for(var i = 0; i < lat.length; i ++) {
     coord.push([long[i], lat[i]]);
   }
-  console.log(coord[coord.length/2]);
 
   mapboxgl.accessToken = 'pk.eyJ1IjoibGVvbmRpYXNiIiwiYSI6ImNsMHJiNGJyeDAxcnQzZG9wNDZwajNuNDYifQ.47GK1AdHnqacQY-pPpxK_Q';
   var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v11',
-    center: coord[coord.length/2],
-    zoom: 14
+    center: coord[Math.floor(coord.length/2)],
+    zoom: 15
   });
   
   map.on('load', () => {
-    console.log(coord);
     map.addSource('route', {
       'type': 'geojson',
       'data': {
