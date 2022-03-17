@@ -1,29 +1,32 @@
+<%= link_to root_url do %>
+  <p>BACK</p>
+<% end %>
 <div>
   <p>WATCH:</p>
   <p id="stopwatch">00:00:00</p>
   <p>DISTANCE:</p>
-  <p id="distance-box">0</p>
+  <p id="distance-box">0m</p>
 </div>
 <button id="start" onclick="getLocationUpdate()">Start</button>
-<button id="stop" onclick="stopWatch()">Stop</button>
+<button id="stop" style="display: none;" onclick="stopWatch()">Stop</button>
 
 <%= form_with model: @track, url: user_tracks_path(@user.id), method: :post do |f| %>
-  <%= f.label :extra %>
-  <%= f.text_field :extra %>
-
+  <%= f.hidden_field :name, id:'name' %>
   <%= f.hidden_field :time, id:'time' %>
+  <%= f.hidden_field :coords, id:'coords' %>
+  <%= f.hidden_field :distance, id:'distance' %>
 
-  <div id='lat-div'></div>
-  <div id='long-div'></div>
-  <div id='timestp-div'></div>
-  <div id='speed-div'></div>
-
-  <%= f.submit "Save" %>
+  <div id='speed-div' style="display: none;"></div>
+  
+  <%= f.submit "Save", id: 'save', style: 'display: none;' %>
 <% end %>
 
 <script>
   var watchID;
   var geoLoc;
+  const startBtn = document.getElementById('start');
+  const stopBtn = document.getElementById('stop');
+  const saveBtn = document.getElementById('save');
 
   const timer = document.getElementById('stopwatch');
   var hr = 0;
@@ -31,9 +34,6 @@
   var sec = 0;  
   var stoptime = true;  
 
-  var latitude = [];
-  var longitude = [];
-  var timestp = [];
   var speed = [];
 
   const dbox = document.getElementById('distance-box');
@@ -41,31 +41,70 @@
   var lat1 = 0;
   var long1 = 0;
 
+  var coords = [];
+
+  const date = new Date();
+  const dateDay = date.getDay();
+  const dateHour = date.getHours();
+  var day = '';
+  var hour = '';
+
+  switch(dateDay) {
+    case 1:
+     day = 'Monday ';
+     break
+    case 2:
+     day = 'Tuesday ';
+     break
+    case 3:
+     day = 'Wednesday ';
+     break
+    case 4:
+     day = 'Thrusday ';
+     break
+    case 5:
+     day = 'Friday ';
+     break
+    case 6:
+     day = 'Saturday ';
+     break
+    case 7:
+     day = 'Sunday ';
+  }
+
+  if(dateHour >= 5 && dateHour <= 11) {
+    hour = 'Morning ';
+  }
+
+  if(dateHour >= 12 && dateHour <=16) {
+    hour = 'Afternoon ';
+  }
+
+  if(dateHour >= 17 && dateHour <= 20) {
+    hour = 'Evening ';
+  }
+
+  if(dateHour >= 21 || dateHour <= 4) {
+    hour = 'Night ';
+  }
+
   function getLocationUpdate() {
     if(navigator.geolocation){
       geoLoc = navigator.geolocation;
+      toggle();
       watchID = geoLoc.watchPosition(data => {
         if (stoptime == true) {
           stoptime = false;
           timerCycle();
         }
-        latitude.push(data.coords.latitude);
-        longitude.push(data.coords.longitude);
-        timestp.push(data.timestamp);
+        console.log(data);
+        coords.push([data.coords.longitude, data.coords.latitude]);
         if(data.coords.speed) {
           speed.push(data.coords.speed);
         }
         if((lat1 !== 0) && (long1 !== 0)) {
           distance(lat1, data.coords.latitude, long1, data.coords.longitude)
-          console.log('distance runs');
         }
-        console.log('dist:');
-        console.log(dist);
-        console.log('lat');
-        console.log(lat1);
-        console.log('long:');
-        console.log(long1);
-        console.log('---');
         lat1 = data.coords.latitude;
         long1 = data.coords.longitude;
       }, (error) => console.log(error),
@@ -82,36 +121,10 @@
       stoptime = true;
     }
     geoLoc.clearWatch(watchID);
-    const len = latitude.length;
-    for(var i = 0; i < len; i++) {
-      var lat = document.getElementById('lat-div').appendChild(
-          document.createElement('input')
-      )
-      lat.value = [latitude[i]];
-      lat.id = 'track_latitude';
-      lat.name = 'track[latitude][]';
-      lat.type = 'hidden';
-      lat.step = 'any';
-
-      var long = document.getElementById('long-div').appendChild(
-          document.createElement('input')
-      )
-      long.value = longitude[i];
-      long.id = 'track_longitude';
-      long.name = 'track[longitude][]';
-      long.type = 'hidden';
-      long.step = 'any';
-
-      var tmstp = document.getElementById('timestp-div').appendChild(
-          document.createElement('input')
-      )
-      tmstp.value = timestp[i];
-      tmstp.id = 'track_timestp';
-      tmstp.name = 'track[timestp][]';
-      tmstp.type = 'hidden';
-      tmstp.step = 'any';
-
-      if(speed.length > 0) {
+    toggle();
+    const len = speed.length;
+    if(speed.length > 0) {
+      for(var i = 0; i < len; i++) {
         var spd = document.getElementById('speed-div').appendChild(
             document.createElement('input')
         )
@@ -122,7 +135,12 @@
         spd.step = 'any';
       }
     }
-    document.getElementById('time').value = sec + (min * 60) + (hr * 3600);
+    document.getElementById('time').value = (sec * 1) + (min * 60) + (hr * 3600);
+    console.log(coords);
+    console.log(JSON.stringify(coords));
+    document.getElementById('distance').value = dist;
+    document.getElementById('coords').value = JSON.stringify(coords);
+    document.getElementById('name').value = day + hour + 'Run';
   }
 
   function timerCycle() {
@@ -175,8 +193,19 @@
 
       var d = R * c;
       dist += d;
-      console.log(dist);
     }
-    dbox.innerHTML = dist;
+    dbox.innerHTML = Math.floor(dist) + 'm';
+  }
+
+  function toggle() {
+    if (start.style.display === 'none') {
+      startBtn.style.display = 'block';
+      stopBtn.style.display = 'none';
+      saveBtn.style.display = 'block';
+    } else {
+      startBtn.style.display = 'none';
+      stopBtn.style.display = 'block';
+      saveBtn.style.display = 'none';
+    }
   }
 </script>
