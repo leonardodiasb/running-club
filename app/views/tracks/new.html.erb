@@ -57,7 +57,15 @@
         }
         if((lat1 !== 0) && (long1 !== 0)) {
           distance(lat1, data.coords.latitude, long1, data.coords.longitude)
+          console.log('distance runs');
         }
+        console.log('dist:');
+        console.log(dist);
+        console.log('lat');
+        console.log(lat1);
+        console.log('long:');
+        console.log(long1);
+        console.log('---');
         lat1 = data.coords.latitude;
         long1 = data.coords.longitude;
       }, (error) => console.log(error),
@@ -167,6 +175,7 @@
 
       var d = R * c;
       dist += d;
+      console.log(dist);
     }
     dbox.innerHTML = dist;
   }
