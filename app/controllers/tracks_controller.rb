@@ -9,7 +9,6 @@ class TracksController < ApplicationController
   def show
     @user = current_user
     @track = Track.find(params[:id])
-    @tm = @track.timestp.last - @track.timestp[0]
   end
   
   def new
@@ -33,6 +32,6 @@ class TracksController < ApplicationController
   private
   
   def track_params
-    params.require(:track).permit(:extra, { :latitude => [] }, { :longitude => [] }, { :timestp => [] }, { :speed => [] }, { :accuracy => [] }, { :altitude => [] }, { :altitude_accuracy => [] }, :time)
+    params.require(:track).permit(:name, :time, :distance, :coords, { :speed => [] })
   end
 end
