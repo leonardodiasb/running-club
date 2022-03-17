@@ -4,41 +4,12 @@
 <h1>This track exists</h1>
 <p>TIME SPENT:<%= @track.time %></p>
 <p>CREATED AT:<%= @track.created_at%></p>
+<p>NAME:<%= @track.name%></p>
 
 <div style="display: flex; flex-wrap: wrap;">
-  <div style="border-right: 1px solid;">
-    <p>LAT:</p>
-    <div>
-      <%= content_tag "div", id: "lat", data: {lat: @track.latitude} do %>
+  <div>
+      <%= content_tag "div", id: "coords", data: {coords: @track.coords} do %>
       <% end %>
-      <% @track.latitude.each do |lat| %>
-        <p><%= lat %></p>
-      <% end %>
-    </div>
-  </div>
-  <div style="border-right: 1px solid;">
-    <p>LONG:</p>
-    <div>
-      <%= content_tag "div", id: "long", data: {long: @track.longitude} do %>
-      <% end %>
-      <% @track.longitude.each do |long| %>
-        <p><%= long %></p>
-    <% end %>
-    </div>
-  </div>
-  <div style="border-right: 1px solid;">
-    <p>TIMESTAMP:</p>
-    <div>
-      <% @track.timestp.each do |tmstp| %>
-        <p><%= tmstp - @track.timestp[0] %></p>
-    <% end %>
-    </div>
-  </div>
-  <div style="border-right: 1px solid;">
-    <p>TIME FROM TIMESTAMP:</p>
-    <div>
-      <%= @tm %>
-    </div>
   </div>
   <div style="border-right: 1px solid;">
     <p>SPEED:</p>
@@ -53,21 +24,14 @@
 <div id='map' style='width: 400px; height: 300px;'></div>
 <script>
 
-  var coord = [];
-  var latElement = document.getElementById('lat');
-  var lat = JSON.parse(latElement.dataset.lat);
-  var longElement = document.getElementById('long');
-  var long = JSON.parse(longElement.dataset.long);
-
-  for(var i = 0; i < lat.length; i ++) {
-    coord.push([long[i], lat[i]]);
-  }
+  var coords = JSON.parse(document.getElementById('coords').dataset.coords);
+  console.log(coords);
 
   mapboxgl.accessToken = 'pk.eyJ1IjoibGVvbmRpYXNiIiwiYSI6ImNsMHJiNGJyeDAxcnQzZG9wNDZwajNuNDYifQ.47GK1AdHnqacQY-pPpxK_Q';
   var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v11',
-    center: coord[Math.floor(coord.length/2)],
+    center: coords[Math.floor(coords.length/2)],
     zoom: 15
   });
   
@@ -79,7 +43,7 @@
         'properties': {},
         'geometry': {
           'type': 'LineString',
-          'coordinates': coord
+          'coordinates': coords
         }
       }
     });
