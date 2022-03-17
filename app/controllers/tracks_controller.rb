@@ -10,7 +10,7 @@ class TracksController < ApplicationController
     @user = current_user
     @track = Track.find(params[:id])
   end
-  
+
   def new
     @user = current_user
     @track = Track.new
@@ -30,8 +30,8 @@ class TracksController < ApplicationController
   end
 
   private
-  
+
   def track_params
-    params.require(:track).permit(:name, :time, :distance, :coords, { :speed => [] })
+    params.require(:track).permit(:name, :time, :distance, :coords, { speed: [] })
   end
 end
