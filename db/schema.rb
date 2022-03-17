@@ -10,24 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_14_173036) do
+ActiveRecord::Schema.define(version: 2022_03_14_172122) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "tracks", force: :cascade do |t|
-    t.float "longitude", default: [], array: true
-    t.float "latitude", default: [], array: true
     t.integer "time"
-    t.text "extra"
+    t.string "name"
+    t.integer "distance"
+    t.text "coords"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "user_id", null: false
-    t.bigint "timestp", default: [], array: true
     t.float "speed", default: [], array: true
-    t.integer "altitude", default: [], array: true
-    t.integer "accuracy", default: [], array: true
-    t.integer "altitude_accuracy", default: [], array: true
     t.index ["user_id"], name: "index_tracks_on_user_id"
   end
 
