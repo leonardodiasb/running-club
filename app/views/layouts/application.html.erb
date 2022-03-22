@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
 
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
@@ -14,9 +15,13 @@
   </head>
 
   <body>
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
-    <div>
+    <% if notice.present? %>
+      <p class="notice fixed z-10 bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 mt-4 ml-24 shadow-md text-sm"><%= notice %></p>
+    <% end %>
+    <% if alert.present? %>
+      <p class="alert fixed z-10 bg-red-400"><%= alert %></p>
+    <% end %>
+    <div class="ml-12">
       <% if user_signed_in? %>
         <%= link_to "Sign Out", destroy_user_session_path, :method => :delete%>
       <% end %>

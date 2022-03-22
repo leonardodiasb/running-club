@@ -1,5 +1,5 @@
 <header>
-  <h1>YOU ARE LOGGED IN</h1>
+  <h1 class="mt-10 underline pt-5 text-2xl text-red-600">YOU ARE LOGGED IN</h1>
   <%= link_to 'START NEW RUN', new_user_track_path(@user.id) %>
   <ul>
     <% @tracks.each do |track| %>
